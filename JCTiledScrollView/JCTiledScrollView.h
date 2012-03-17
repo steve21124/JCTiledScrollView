@@ -27,9 +27,9 @@
 //  SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE
 //
 
-#import <UIKit/UIKit.h>
+@class JCTiledScrollView, JCTiledView, JCTiledScrollViewAnnotationView;
 
-@class JCTiledScrollView, JCTiledView;
+@protocol JCTiledScrollViewAnnotation;
 
 @protocol JCTileSource <NSObject>
 - (UIImage *)tiledScrollView:(JCTiledScrollView *)scrollView imageForRow:(NSInteger)row column:(NSInteger)column scale:(NSInteger)scale;
@@ -44,6 +44,7 @@
 - (void)tiledScrollView:(JCTiledScrollView *)scrollView didReceiveDoubleTap:(UIGestureRecognizer *)gestureRecognizer;
 - (void)tiledScrollView:(JCTiledScrollView *)scrollView didReceiveTwoFingerTap:(UIGestureRecognizer *)gestureRecognizer;
 
+- (JCTiledScrollViewAnnotationView *)annotationViewForJCAnnotationView:(id<JCTiledScrollViewAnnotation>)annotation;
 @end
 
 @interface JCTiledScrollView : UIScrollView <UIScrollViewDelegate>
