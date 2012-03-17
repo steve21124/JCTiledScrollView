@@ -8,6 +8,8 @@
 
 #import "RootViewController.h"
 #import "JCTiledPDFScrollView.h"
+#import "JCTiledScrollViewAnnotationView.h"
+#import "WidgetAnnotation.h"
 
 #define SkippingGirlImageSize CGSizeMake(432., 648.)
 
@@ -64,6 +66,9 @@
   [self.view addSubview:self.scrollView];
 
   [self tiledScrollViewDidZoom:self.scrollView]; //force the detailView to update the frist time
+  
+  WidgetAnnotation *annotation = [[[WidgetAnnotation alloc] init] autorelease];
+  [self.scrollView addAnnotation:annotation];
 }
 
 - (void)viewDidUnload
@@ -92,6 +97,13 @@
 
   //tap point on the tiledView does not inlcude the zoomScale applied by the scrollView
   self.detailView.textLabel.text = [NSString stringWithFormat:@"zoomScale: %0.2f, x: %0.0f y: %0.0f", scrollView.zoomScale, tapPoint.x, tapPoint.y];
+}
+
+- (JCTiledScrollViewAnnotationView *)annotationViewForAnnotation:(id<JCTiledScrollViewAnnotation>)annotation
+{
+  JCTiledScrollViewAnnotationView *annotationView = [[WidgetAnnotationView alloc] initWithFrame:CGRectMake(0, 0, 20, 20)];
+  annotationView.backgroundColor = [UIColor greenColor];
+  return [annotationView autorelease];
 }
 
 #pragma mark - JCTileSource

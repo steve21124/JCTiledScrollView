@@ -19,6 +19,7 @@
 		887EE98314D8DDDA00AB0A92 /* JCTiledScrollView.m in Sources */ = {isa = PBXBuildFile; fileRef = 887EE98014D8DDDA00AB0A92 /* JCTiledScrollView.m */; };
 		887EE98414D8DDDA00AB0A92 /* JCTiledView.m in Sources */ = {isa = PBXBuildFile; fileRef = 887EE98214D8DDDA00AB0A92 /* JCTiledView.m */; };
 		88B0F06415148FBC009F4CEC /* JCTiledScrollViewAnnotationView.m in Sources */ = {isa = PBXBuildFile; fileRef = 88B0F06315148FBC009F4CEC /* JCTiledScrollViewAnnotationView.m */; };
+		88B0F0691514A73F009F4CEC /* WidgetAnnotation.m in Sources */ = {isa = PBXBuildFile; fileRef = 88B0F0681514A73F009F4CEC /* WidgetAnnotation.m */; };
 		88C19C80150C4D6F007184E6 /* README.md in Resources */ = {isa = PBXBuildFile; fileRef = 88C19C7F150C4D6E007184E6 /* README.md */; };
 		88CD1A3A14E2007F00B54AF0 /* Icon-72.png in Resources */ = {isa = PBXBuildFile; fileRef = 88CD1A3714E2007F00B54AF0 /* Icon-72.png */; };
 		88CD1A3B14E2007F00B54AF0 /* Icon.png in Resources */ = {isa = PBXBuildFile; fileRef = 88CD1A3814E2007F00B54AF0 /* Icon.png */; };
@@ -53,6 +54,8 @@
 		88B0F06215148FBC009F4CEC /* JCTiledScrollViewAnnotationView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JCTiledScrollViewAnnotationView.h; sourceTree = "<group>"; };
 		88B0F06315148FBC009F4CEC /* JCTiledScrollViewAnnotationView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JCTiledScrollViewAnnotationView.m; sourceTree = "<group>"; };
 		88B0F0661514901D009F4CEC /* JCTiledScrollViewAnnotation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JCTiledScrollViewAnnotation.h; sourceTree = "<group>"; };
+		88B0F0671514A73F009F4CEC /* WidgetAnnotation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WidgetAnnotation.h; sourceTree = "<group>"; };
+		88B0F0681514A73F009F4CEC /* WidgetAnnotation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WidgetAnnotation.m; sourceTree = "<group>"; };
 		88C19C7F150C4D6E007184E6 /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = README.md; path = ../README.md; sourceTree = "<group>"; };
 		88CD1A3714E2007F00B54AF0 /* Icon-72.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Icon-72.png"; sourceTree = "<group>"; };
 		88CD1A3814E2007F00B54AF0 /* Icon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Icon.png; sourceTree = "<group>"; };
@@ -125,6 +128,8 @@
 				88E49D3614E2788400D688DF /* DetailView.h */,
 				88E49D3714E2788400D688DF /* DetailView.m */,
 				887EE94C14D8DC2D00AB0A92 /* Supporting Files */,
+				88B0F0671514A73F009F4CEC /* WidgetAnnotation.h */,
+				88B0F0681514A73F009F4CEC /* WidgetAnnotation.m */,
 			);
 			path = JCTiledViewDemo;
 			sourceTree = "<group>";
@@ -263,6 +268,7 @@
 				88DCC87F14F3BEAA00B206F5 /* JCTiledLayer.m in Sources */,
 				88DCC88914F6505300B206F5 /* JCTiledPDFScrollView.m in Sources */,
 				88B0F06415148FBC009F4CEC /* JCTiledScrollViewAnnotationView.m in Sources */,
+				88B0F0691514A73F009F4CEC /* WidgetAnnotation.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

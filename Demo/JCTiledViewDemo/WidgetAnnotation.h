@@ -6,8 +6,11 @@
 //  Copyright (c) 2012 JC Multimedia Design. All rights reserved.
 //
 
-#import <Foundation/Foundation.h>
+#import "JCTiledScrollViewAnnotation.h"
+#import "JCTiledScrollViewAnnotationView.h"
 
-@interface WidgetAnnotation : NSObject
+@interface WidgetAnnotation : NSObject <JCTiledScrollViewAnnotation>
+@end
 
+@interface WidgetAnnotationView : JCTiledScrollViewAnnotationView
 @end
