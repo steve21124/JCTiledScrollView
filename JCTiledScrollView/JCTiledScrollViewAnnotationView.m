@@ -30,22 +30,23 @@
 
 @implementation JCTiledScrollViewAnnotationView
 
+@synthesize offset = _offset;
+@synthesize annotation = _annotation;
+
 - (id)initWithFrame:(CGRect)frame
-{
-    self = [super initWithFrame:frame];
-    if (self) {
-        // Initialization code
-    }
-    return self;
+{  
+  if ((self = [super initWithFrame:frame]))
+  {
+    self.offset = CGSizeZero;
+  }
+  return self;
 }
 
-/*
-// Only override drawRect: if you perform custom drawing.
-// An empty implementation adversely affects performance during animation.
-- (void)drawRect:(CGRect)rect
+- (void)dealloc;
 {
-    // Drawing code
+  RELEASE(_annotation);
+
+  [super dealloc];
 }
-*/
 
 @end

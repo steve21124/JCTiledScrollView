@@ -30,8 +30,16 @@
 #import "JCTiledScrollView.h"
 #import "JCTiledView.h"
 
-@interface JCTiledScrollView () <JCTiledBitmapViewDelegate>
-@property (nonatomic, retain) UIView *canvasView;
+#import "JCTiledScrollViewAnnotation.h"
+#import "JCTiledScrollViewAnnotationView.h"
+
+@interface JCTiledScrollView () <JCTiledBitmapViewDelegate> {
+  NSMutableSet *_annotations;
+  NSMutableSet *_annotationViews;
+}
+
+@property (nonatomic, retain) UIView *canvasView; //remove property
+
 @property (nonatomic, retain) UITapGestureRecognizer *singleTapGestureRecognizer;
 @property (nonatomic, retain) UITapGestureRecognizer *doubleTapGestureRecognizer;
 @property (nonatomic, retain) UITapGestureRecognizer *twoFingerTapGestureRecognizer;
@@ -39,6 +47,8 @@
 - (void)singleTapReceived:(UITapGestureRecognizer *)gestureRecognizer;
 - (void)twoFingerTapReceived:(UITapGestureRecognizer *)gestureRecognizer;
 - (void)doubleTapReceived:(UITapGestureRecognizer *)gestureRecognizer;
+
+- (void)updateAnnotationViews;
 
 @end
 
@@ -56,6 +66,7 @@
 @synthesize singleTapGestureRecognizer = _singleTapGestureRecognizer;
 @synthesize doubleTapGestureRecognizer = _doubleTapGestureRecognizer;
 @synthesize twoFingerTapGestureRecognizer = _twoFingerTapGestureRecognizer;
+@dynamic annotations;
 
 + (Class)tiledLayerClass
 {
@@ -79,6 +90,9 @@
     self.zoomsOutOnTwoFingerTap = YES;
     self.centerSingleTap = YES;
 
+    _annotations = [[NSMutableSet alloc] init];
+    _annotationViews = [[NSMutableSet alloc] init];
+
     CGRect canvas_frame = CGRectMake(0.0f, 0.0f, self.contentSize.width, self.contentSize.height);
     _canvasView = [[UIView alloc] initWithFrame:canvas_frame];
 
@@ -86,7 +100,6 @@
     self.tiledView.delegate = self;
     
     [self.canvasView addSubview:self.tiledView];
-
     [self addSubview:self.canvasView];
 
     _singleTapGestureRecognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(singleTapReceived:)];
@@ -115,6 +128,8 @@
   RELEASE(_singleTapGestureRecognizer);
   RELEASE(_doubleTapGestureRecognizer);
   RELEASE(_twoFingerTapGestureRecognizer);
+  RELEASE(_annotations);
+  RELEASE(_annotationViews);
 
 	[super dealloc];
 }
@@ -131,6 +146,16 @@
   if ([self.tiledScrollViewDelegate respondsToSelector:@selector(tiledScrollViewDidZoom:)])
   {
     [self.tiledScrollViewDelegate tiledScrollViewDidZoom:self];
+  }
+}
+
+- (void)scrollViewDidEndZooming:(UIScrollView *)scrollView withView:(UIView *)view atScale:(float)scale
+{
+  //float closestLOD = powf(2, floorf(log2f(scrollView.zoomScale))) * [[UIScreen mainScreen] scale];
+  float newScale = scrollView.zoomScale * [[UIScreen mainScreen] scale];
+  for (UIView *annotationView in _annotationViews)
+  {
+    annotationView.contentScaleFactor = newScale;
   }
 }
 
@@ -185,9 +210,102 @@
   }
 }
 
+
+#pragma mark - Annotations
+
+- (NSArray *)annotations
+{
+  return [_annotations allObjects];
+}
+
+- (void)addAnnotation:(id<JCTiledScrollViewAnnotation>)annotation
+{
+  [self addAnnotations:[NSArray arrayWithObject:annotation]];
+}
+
+- (void)addAnnotations:(NSArray *)annotations
+{
+  NSUInteger before = [_annotations count];
+  [_annotations addObjectsFromArray:annotations];
+
+  if ([_annotations count] > before)
+  {
+    [self updateAnnotationViews];
+  }
+}
+
+- (void)removeAnnotation:(id<JCTiledScrollViewAnnotation>)annotation
+{
+  [self removeAnnotations:[NSArray arrayWithObject:annotation]];
+}
+
+- (void)removeAnnotations:(NSArray *)annotations
+{
+  NSUInteger before = [_annotations count];
+
+  for (id annotation in annotations)
+  {
+    [_annotations removeObject:annotation];
+  }
+
+  if ([_annotations count] < before)
+  {
+    [self updateAnnotationViews];
+  }
+}
+
+//FIXME: implementation can be optimised by not searching all arrays and sets so many times
+//       consider saving (privately) the relationship between the annotation and annotation view
+
+- (void)updateAnnotationViews
+{
+  // remove orphaned annotation views
+  for (JCTiledScrollViewAnnotationView *annotationView in _annotationViews)
+  {
+    if (![_annotations containsObject:[annotationView annotation]])
+    {
+      [annotationView removeFromSuperview];
+      [_annotationViews removeObject:annotationView];
+    } 
+  }
+
+  //add new annotation views
+  for (id<JCTiledScrollViewAnnotation>annotation in _annotations)
+  {
+    id annotationView = nil;
+    for (JCTiledScrollViewAnnotationView *view in _annotationViews)
+    {
+      if (annotation == view.annotation)
+      {
+        annotationView = view;
+        break;
+      }
+    }
+    if (annotationView != nil) continue; //already exists
+
+    if ([self.tiledScrollViewDelegate respondsToSelector:@selector(annotationViewForAnnotation:)])
+    {
+      JCTiledScrollViewAnnotationView *newAnnotationView = [self.tiledScrollViewDelegate annotationViewForAnnotation:annotation];
+      if (nil == newAnnotationView) continue;
+
+      [annotationView sizeToFit];
+
+      CGPoint centerPoint = annotation.mapPoint;
+      centerPoint.x += newAnnotationView.offset.width;
+      centerPoint.y += newAnnotationView.offset.height;
+
+      newAnnotationView.center = centerPoint;
+      newAnnotationView.contentScaleFactor = self.contentScaleFactor * self.zoomScale;
+
+      [_annotationViews addObject:newAnnotationView];
+      [self.canvasView addSubview:newAnnotationView];
+    }
+  }
+}
+
 #pragma mark - JCTiledScrollView
 
--(void)setLevelsOfZoom:(size_t)levelsOfZoom
+- (void)setLevelsOfZoom:(size_t)levelsOfZoom
 {
   _levelsOfZoom = levelsOfZoom;
   self.maximumZoomScale = (float)powf(2.0f, MAX(0.0f, levelsOfZoom));
@@ -215,7 +333,7 @@
 
 #pragma mark - JCTileSource
 
--(UIImage *)tiledView:(JCTiledView *)tiledView imageForRow:(NSInteger)row column:(NSInteger)column scale:(NSInteger)scale
+- (UIImage *)tiledView:(JCTiledView *)tiledView imageForRow:(NSInteger)row column:(NSInteger)column scale:(NSInteger)scale
 {
   return [self.dataSource tiledScrollView:self imageForRow:row column:column scale:scale];
 }

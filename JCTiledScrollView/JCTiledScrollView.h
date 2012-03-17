@@ -44,7 +44,7 @@
 - (void)tiledScrollView:(JCTiledScrollView *)scrollView didReceiveDoubleTap:(UIGestureRecognizer *)gestureRecognizer;
 - (void)tiledScrollView:(JCTiledScrollView *)scrollView didReceiveTwoFingerTap:(UIGestureRecognizer *)gestureRecognizer;
 
-- (JCTiledScrollViewAnnotationView *)annotationViewForJCAnnotationView:(id<JCTiledScrollViewAnnotation>)annotation;
+- (JCTiledScrollViewAnnotationView *)annotationViewForAnnotation:(id<JCTiledScrollViewAnnotation>)annotation;
 @end
 
 @interface JCTiledScrollView : UIScrollView <UIScrollViewDelegate>
@@ -57,11 +57,18 @@
 @property (nonatomic, assign) BOOL centerSingleTap;
 @property (nonatomic, assign) BOOL zoomsInOnDoubleTap;
 @property (nonatomic, assign) BOOL zoomsOutOnTwoFingerTap;
+@property (nonatomic, readonly) NSArray *annotations;
 
 + (Class)tiledLayerClass;
 
 - (id)initWithFrame:(CGRect)frame contentSize:(CGSize)contentSize;
 
 - (void)setContentCenter:(CGPoint)center animated:(BOOL)animated;
+
+- (void)addAnnotation:(id<JCTiledScrollViewAnnotation>)annotation;
+- (void)addAnnotations:(NSArray *)annotations;
+
+- (void)removeAnnotation:(id<JCTiledScrollViewAnnotation>)annotation;
+- (void)removeAnnotations:(NSArray *)annotations;
 
 @end

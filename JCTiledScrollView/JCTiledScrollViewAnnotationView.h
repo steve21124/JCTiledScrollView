@@ -27,7 +27,11 @@
 // 
 
 #import "JCTiledScrollView.h"
+#import "JCTiledScrollViewAnnotation.h"
 
 @interface JCTiledScrollViewAnnotationView : UIView
+
+@property (nonatomic, assign) CGSize offset;
+@property (nonatomic, retain) id<JCTiledScrollViewAnnotation>annotation;
 
 @end
